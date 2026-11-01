@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#6ec6ff">
+<title>Abhinav Idly Flyer</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main class="shell" id="shell" data-state="ready">
+  <div class="stage" id="stage">
+    <canvas id="gameCanvas" role="img" aria-label="Abhinav Idly Flyer game area"></canvas>
+
+    <!-- In-game heads-up display -->
+    <div class="hud" id="hud">
+      <div class="best-pill">Best <b id="hudBest">0</b></div>
+      <div class="hud-score" id="hudScore" aria-live="polite">0</div>
+      <div class="hud-buttons">
+        <button type="button" class="icon-btn" id="pauseBtn" aria-label="Pause game" title="Pause (P)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.5"/><rect x="14" y="5" width="4" height="14" rx="1.5"/></svg>
+        </button>
+        <button type="button" class="icon-btn" id="soundBtn" aria-label="Mute sound" aria-pressed="false" title="Sound (M)">
+          <svg class="icon-sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5H4z"/><path class="wave" d="M15 9a4 4 0 0 1 0 6M17.5 6.5a8 8 0 0 1 0 11" fill="none" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg class="icon-sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 19V5L7.5 9.5H4z"/><path class="wave" d="M16 9.5l5 5M21 9.5l-5 5" fill="none" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Start screen -->
+    <section class="overlay" id="startScreen" aria-labelledby="startTitle">
+      <div class="card">
+        <h1 class="logo" id="startTitle"><span>ABHINAV</span><span>IDLY FLYER</span></h1>
+        <p class="subtitle">South Indian Tiffin Challenge</p>
+        <div class="preview" aria-hidden="true">
+          <div class="preview-bird"><img id="previewFace" src="assets/friend.png" alt="" draggable="false"><span class="preview-fallback">🐦</span></div>
+          <div class="preview-chips">
+            <span class="chip c-IDLY">IDLY</span><span class="chip c-MASALA">DOSA</span><span class="chip c-PLAIN">VADA</span><span class="chip c-VADA">CHUTNEY</span><span class="chip c-CHUTNEY">SAMBAR</span>
+          </div>
+        </div>
+        <p class="best-line">Best score <b id="startBest">0</b></p>
+        <button type="button" class="btn btn-primary" id="startBtn">Start Game</button>
+        <p class="hint">Tap or press Space to fly between crispy dosa pillars</p>
+      </div>
+    </section>
+
+    <!-- Pause screen -->
+    <section class="overlay is-hidden" id="pauseScreen" aria-labelledby="pauseTitle">
+      <div class="card card-small">
+        <h2 class="card-title" id="pauseTitle">Paused</h2>
+        <p class="card-text">Take a breath. Your score is safe.</p>
+        <button type="button" class="btn btn-primary" id="resumeBtn">Resume</button>
+        <button type="button" class="btn btn-secondary" id="pauseRestartBtn">Restart</button>
+      </div>
+    </section>
+
+    <!-- Game-over screen -->
+    <section class="overlay is-hidden" id="overScreen" aria-labelledby="overTitle">
+      <div class="card">
+        <h2 class="card-title over-title" id="overTitle">GAME OVER</h2>
+        <p class="card-text" id="overMessage">One more attempt?</p>
+        <div class="score-row">
+          <div class="score-box"><span>Score</span><b id="overScore">0</b></div>
+          <div class="score-box score-box-best"><span>Best</span><b id="overBest">0</b></div>
+        </div>
+        <p class="new-best is-hidden" id="newBest">★ New best score! ★</p>
+        <button type="button" class="btn btn-primary" id="restartBtn">Restart</button>
+      </div>
+    </section>
+
+    <div class="flash" id="flash" aria-hidden="true"></div>
+  </div>
+
+  <!-- Shown only if the game cannot start -->
+  <div class="fatal is-hidden" id="fatal" role="alert">
+    <div class="card card-small">
+      <h2 class="card-title">Oops!</h2>
+      <p class="card-text">The game couldn't start in this browser. Please reload the page or try a newer browser.</p>
+      <button type="button" class="btn btn-primary" onclick="location.reload()">Reload</button>
+    </div>
+  </div>
+</main>
+
+<noscript><div class="fatal"><div class="card card-small"><h2 class="card-title">JavaScript needed</h2><p class="card-text">Please enable JavaScript to play Abhinav Idly Flyer.</p></div></div></noscript>
+
+<script src="js/audio.js"></script>
+<script src="js/player.js"></script>
+<script src="js/obstacles.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+<script>
+  // Safety net: if the game scripts failed to start, show a friendly message instead of a blank page.
+  window.addEventListener('load', function () {
+    if (!(window.TapBird && window.TapBird.started)) {
+      var fatal = document.getElementById('fatal');
+      if (fatal) fatal.classList.remove('is-hidden');
+    }
+  });
+</script>
+</body>
+</html>
