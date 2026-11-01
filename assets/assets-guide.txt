@@ -1,7 +1,1 @@
-Abhinav Idly Flyer assets
-
-friend.png: Character face image used on the flying idly.
-gameplay.mp3: Optional gameplay music.
-gameover.mp3: Optional game-over sound.
-
-Dosa pillars are drawn by the game and do not require obstacle image files. The standalone HTML embeds its own copies of assets.
+Replace assets using these exact names: friend.png, obstacle-1.png, obstacle-2.png, gameplay.mp3, gameover.mp3. obstacle-1.png is the vertical dosa pillar sprite. Use transparent PNGs for best results. Telugu labels are built into the game.

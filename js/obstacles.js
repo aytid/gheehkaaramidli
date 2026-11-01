@@ -4,17 +4,19 @@
 
   /* ======= SOUTH INDIAN TIFFIN THEME ======= */
   var SUBJECTS = {
-    IDLY: { name: 'Soft Idly', color: '#fff4d6', dark: '#d8b98a', topics: ['Steamy Idly', 'Mini Idly', 'Ghee Podi Idly'] },
-    MASALA: { name: 'Masala Dosa', color: '#d78b28', dark: '#8d4d17', topics: ['Masala Dosa', 'Crispy Dosa', 'Ghee Roast'] },
-    PLAIN: { name: 'Plain Dosa', color: '#e7b45c', dark: '#a76521', topics: ['Plain Dosa', 'Paper Dosa', 'Set Dosa'] },
-    VADA: { name: 'Medu Vada', color: '#b86a27', dark: '#713c16', topics: ['Medu Vada', 'Sambar Vada', 'Crispy Vada'] },
-    CHUTNEY: { name: 'Chutney', color: '#4d8b45', dark: '#28552b', topics: ['Coconut Chutney', 'Tomato Chutney', 'Mint Chutney'] }
+    GHEE: { name: 'Ghee Karam Idli', color: '#f2c66d', dark: '#9b4c18', topics: ['Ghee Karam Idli', 'నెయ్యి కారం ఇడ్లీ'] },
+    RASAM: { name: 'Rasam Idli', color: '#e7a15a', dark: '#963c20', topics: ['Rasam Idli', 'రసం ఇడ్లీ'] },
+    PALYAM: { name: 'Palyam Dosa', color: '#e9b34d', dark: '#8f4c18', topics: ['Palyam Dosa', 'పల్యం దోస'] },
+    UPMA: { name: 'Upma Dosa', color: '#e7a23d', dark: '#874116', topics: ['Upma Dosa', 'ఉప్మా దోస'] },
+    ONION: { name: 'Onion Dosa', color: '#d88c36', dark: '#7e3d17', topics: ['Onion Dosa', 'ఉల్లిపాయ దోస'] },
+    PLAINPALYAM: { name: 'Plain Palyam Dosa', color: '#edc36b', dark: '#94501b', topics: ['Plain Palyam Dosa', 'ప్లెయిన్ పల్యం దోస'] },
+    PLAINUPMA: { name: 'Plain Upma Dosa', color: '#e8b75b', dark: '#8d4a17', topics: ['Plain Upma Dosa', 'ప్లెయిన్ ఉప్మా దోస'] },
+    PLAINONION: { name: 'Plain Onion Dosa', color: '#dca14c', dark: '#824319', topics: ['Plain Onion Dosa', 'ప్లెయిన్ ఉల్లిపాయ దోస'] }
   };
-  /* ========================================= */
 
   var SUBJECT_CODES = Object.keys(SUBJECTS);
   var FONT = '"Trebuchet MS", "Segoe UI", Arial, sans-serif';
-  var IMAGE_FILES = []; // Tiffin obstacles are drawn in-game for a consistent style.
+  var IMAGE_FILES = ['assets/obstacle-1.png']; // User-selected vertical dosa image used as the actual obstacle sprite.
 
   var measureCtx = null;
   function getMeasureCtx() {
@@ -93,7 +95,7 @@
           try { self.sprites.push(makeSprite(img)); } catch (e) { /* unusable image: keep fallback */ }
         }
       };
-      img.onerror = function () { /* missing image: built-in books are used */ };
+      img.onerror = function () { /* missing image: illustrated dosa fallback remains playable */ };
       img.src = src;
     });
   };
@@ -191,7 +193,8 @@
     if (h <= 0) return;
     ctx.save();
     ctx.beginPath(); ctx.rect(o.x, y0, o.w, h); ctx.clip();
-    this._drawDosaPillar(ctx, o, y0, y1, isTop);
+    if (o.sprite) this._drawSpriteTiles(ctx, o, y0, y1, isTop);
+    else this._drawDosaPillar(ctx, o, y0, y1, isTop);
     ctx.restore();
   };
 
@@ -245,7 +248,7 @@
 
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#ffffff';
     ctx.font = '900 21px ' + FONT;
-    ctx.fillText(o.subject, px + panelW / 2, py + 16);
+    ctx.fillText(subj.name, px + panelW / 2, py + 16, panelW - 8);
     ctx.font = '700 ' + L.size + 'px ' + FONT;
     for (var i = 0; i < L.lines.length; i++) {
       ctx.fillText(L.lines[i], px + panelW / 2, py + 32 + (i + 0.5) * lineH, panelW - 8);
