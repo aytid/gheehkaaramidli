@@ -779,8 +779,11 @@ noscript .fatal { position: fixed; border-radius: 0; }
       var gapTop = o.gapY - o.gap / 2, gapBottom = o.gapY + o.gap / 2;
       this._drawSegment(ctx, o, 0, gapTop, true);
       this._drawSegment(ctx, o, gapBottom, groundY, false);
-      this._drawLabel(ctx, o, 0, gapTop);
-      this._drawLabel(ctx, o, gapBottom, groundY);
+      if (gapTop >= groundY - gapBottom) {
+        if (!this._drawLabel(ctx, o, 0, gapTop)) this._drawLabel(ctx, o, gapBottom, groundY);
+      } else if (!this._drawLabel(ctx, o, gapBottom, groundY)) {
+        this._drawLabel(ctx, o, 0, gapTop);
+      }
     }
   };
 
@@ -828,10 +831,14 @@ noscript .fatal { position: fixed; border-radius: 0; }
 
   ObstacleManager.prototype._drawLabel = function (ctx, o, y0, y1) {
     var L = o.label, subj = SUBJECTS[o.subject];
+    var lines = [];
+    for (var i = 0; i < L.lines.length; i++) {
+      if (L.lines[i] !== subj.name) lines.push(L.lines[i]);
+    }
     var lineH = L.size + 3;
     var panelW = o.w - 8;
-    var panelH = 36 + L.lines.length * lineH;
-    if (y1 - y0 < panelH + 16) return;                 // segment too short: the other one carries the label
+    var panelH = 36 + lines.length * lineH;
+    if (y1 - y0 < panelH + 16) return false;
     var px = o.x + 4, py = (y0 + y1) / 2 - panelH / 2;
 
     ctx.save();
@@ -846,10 +853,11 @@ noscript .fatal { position: fixed; border-radius: 0; }
     ctx.font = '900 21px ' + FONT;
     ctx.fillText(subj.name, px + panelW / 2, py + 16, panelW - 8);
     ctx.font = '700 ' + L.size + 'px ' + FONT;
-    for (var i = 0; i < L.lines.length; i++) {
-      ctx.fillText(L.lines[i], px + panelW / 2, py + 32 + (i + 0.5) * lineH, panelW - 8);
+    for (var j = 0; j < lines.length; j++) {
+      ctx.fillText(lines[j], px + panelW / 2, py + 32 + (j + 0.5) * lineH, panelW - 8);
     }
     ctx.restore();
+    return true;
   };
 
   TB.SUBJECTS = SUBJECTS;
